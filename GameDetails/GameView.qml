@@ -449,9 +449,10 @@ id: root
             }
             fillMode: Image.PreserveAspectFit
             source: "../assets/images/logospng/" + Utils.processPlatformName(game.collections.get(0).shortName) + ".png"
-            sourceSize.height: header.height
-            smooth: true
-            visible: false
+            sourceSize.height: vpx(100)
+			smooth: true
+            visible: true
+			opacity: 0
             asynchronous: true           
         }
 
