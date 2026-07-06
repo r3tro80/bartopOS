@@ -132,6 +132,15 @@ id: root
         return true;
     }
 
+	function switchCollection(index) {
+        Qt.callLater(() => {
+            currentCollectionIndex = index;
+            gamegrid.currentIndex = 0;
+            gamegrid.forceActiveFocus();
+            sortedGames = null;
+        });
+    }
+
     ListCollectionGames { id: list; }
 
     // Load settings
@@ -419,15 +428,13 @@ id: root
             sfxToggle.play();
             gamegrid.currentIndex = 0;
             cycleSort();
-            if (sortByIndex == 0) {
-                gridviewHelpModel.set(4, {"name": "Previous letter", "button": "pageUp"});
-                gridviewHelpModel.set(5, {"name": "Next letter", "button": "pageDown"});
-                titlegridviewHelpModel.set(4, {"name": "Previous letter", "button": "pageUp"});
-                titlegridviewHelpModel.set(5, {"name": "Next letter", "button": "pageDown"});
-            } else {
-                gridviewHelpModel.remove(4,2);
-                titlegridviewHelpModel.remove(4,2);
-            }
+        // FIX: do not mutate ListModel structure (prevents DelegateModel crash)
+        // Keep models static and only switch reference
+        if (sortByIndex == 0) {
+            currentHelpbarModel = titlegridviewHelpModel;
+        } else {
+            currentHelpbarModel = gridviewHelpModel;
+        }
             if (sortByIndex == 3) {
                 orderBy = Qt.DescendingOrder;
             } else {
