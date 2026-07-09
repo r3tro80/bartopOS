@@ -506,7 +506,7 @@ id: root
                     scale: selected ? 1.1 : 1
                     Behavior on scale { NumberAnimation { duration: 100 } }
                     visible: collectionlogosvg.status == Image.Error
-                 }
+                }
 
                 Text {
                 id: platformname
