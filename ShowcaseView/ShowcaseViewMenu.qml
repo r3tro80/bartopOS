@@ -473,14 +473,16 @@ id: root
 
                 anchors.verticalCenter: parent.verticalCenter
 
+				property var platformFilename: Utils.processPlatformName(modelData.shortName)
+
                 Image {
-                id: collectionlogo
+                id: collectionlogosvg
 
                     anchors.fill: parent
                     anchors.centerIn: parent
                     anchors.margins: vpx(15)
-                    source: "../assets/images/logospng/" + Utils.processPlatformName(modelData.shortName) + ".png"
-                    sourceSize: Qt.size(collectionlogo.width, collectionlogo.height)
+                    source: "../assets/images/logossvg/" + platformFilename + ".svg"
+                    sourceSize: Qt.size(collectionlogosvg.width, collectionlogosvg.height)
                     fillMode: Image.PreserveAspectFit
                     asynchronous: true
                     smooth: true
@@ -488,6 +490,23 @@ id: root
                     scale: selected ? 1.1 : 1
                     Behavior on scale { NumberAnimation { duration: 100 } }
                 }
+
+                Image {
+                id: collectionlogo
+
+                    anchors.fill: parent
+                    anchors.centerIn: parent
+                    anchors.margins: vpx(15)
+                    source: "../assets/images/logospng/" + platformFilename + ".png"
+                    sourceSize: Qt.size(collectionlogo.width, collectionlogo.height)
+                    fillMode: Image.PreserveAspectFit
+                    asynchronous: true
+                    smooth: true
+                    opacity: selected ? 1 : 0.2
+                    scale: selected ? 1.1 : 1
+                    Behavior on scale { NumberAnimation { duration: 100 } }
+                    visible: collectionlogosvg.status == Image.Error
+                 }
 
                 Text {
                 id: platformname
@@ -501,7 +520,12 @@ id: root
                     font.family: subtitleFont.name
                     font.bold: true
                     style: Text.Outline; styleColor: theme.main
-                    visible: collectionlogo.status == Image.Error
+
+					// show text when there's no PNG or SVG
+					visible: {
+						if (collectionlogo.status == Image.Error && collectionlogosvg.status == Image.Error) return true;
+						else return false;
+					}
                     anchors.centerIn: parent
                     elide: Text.ElideRight
                     wrapMode: Text.WordWrap
